@@ -1,0 +1,54 @@
+[package]
+name = "ravichara"
+version = "0.6.0"
+edition = "2021"
+authors = ["RaViChara contributors"]
+description = "RaViChara - Desktop virtual character AI with persistent memory, streaming dialogue, and capability-aware Blender control."
+
+[[bin]]
+name = "RaViChara"
+path = "src/main.rs"
+
+[dependencies]
+tokio = { version = "1.38", features = ["full"] }
+axum = { version = "0.7", features = ["macros", "ws"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+serde_yaml = "0.9"
+rusqlite = { version = "0.31", features = ["bundled"] }
+reqwest = { version = "0.12", default-features = false, features = [
+    "json",
+    "stream",
+    "charset",
+    "http2",
+    "system-proxy",
+    "rustls-tls-manual-roots-no-provider",
+] }
+rustls = { version = "0.23", default-features = false, features = ["ring", "std", "tls12"] }
+async-trait = "0.1"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+chrono = { version = "0.4", features = ["serde"] }
+http-body-util = "0.1"
+
+[target.'cfg(windows)'.dependencies]
+winit = "0.30.13"
+wry = { version = "0.55.1", default-features = false, features = ["os-webview"] }
+windows-sys = { version = "0.61", features = [
+    "Win32_Foundation",
+    "Win32_Security_Cryptography",
+    "Win32_UI_WindowsAndMessaging",
+] }
+
+[profile.dev]
+debug = 0
+incremental = false
+
+[profile.test]
+debug = 0
+incremental = false
+
+[profile.release]
+lto = "thin"
+codegen-units = 1
+strip = "symbols"

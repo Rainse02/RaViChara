@@ -1,0 +1,126 @@
+# RaViChara runtime configuration. Every key is optional; missing values use
+# the defaults in src/config.rs. UI changes are stored in data/overrides.json.
+
+character:
+  card: characters/lily.card.yaml
+  user_name: you
+
+llm:
+  provider: lmstudio
+  base_url: http://127.0.0.1:1234/v1
+  model: qwen3.5-9b-uncensored-hauhaucs-aggressive
+  api_key: ""
+  api_key_env: "LM_API_TOKEN"
+  temperature: 0.5
+  max_tokens: 8192
+  request_timeout_seconds: 180
+  mock_when_no_key: false
+  # Qwen reasoning can consume the whole output budget before producing content.
+  # Disabled uses the provider-native switch. /no_think and chat-template
+  # hints are restricted to local/custom runtimes that support them.
+  thinking_mode: disabled
+  # Keep false to prevent a hidden second request with a doubled token budget.
+  retry_empty_reasoning: false
+  example_dialogue_limit: 1
+  # LM Studio 0.4+ can call this stateless Streamable HTTP MCP during generation.
+  mcp_enabled: true
+  mcp_server_url: http://127.0.0.1:8760/mcp
+  # LM Studio rejects loopback ephemeral MCP URLs. This ID references the
+  # "ravichara" entry in LM Studio mcp.json after plugin use is authorized.
+  mcp_integration_id: mcp/ravichara
+
+embeddings:
+  # Replaceable local embedder; no external model or API is required.
+  provider: hash
+  base_url: ""
+  model: local-hash-v1
+  api_key_env: ""
+  dimensions: 384
+
+memory:
+  # db_path remains for compatibility; new per-character stores use directory.
+  db_path: data/memory.db
+  directory: data/memories
+  working_max_messages: 24
+  working_max_chars: 7000
+  retrieve_facts: 6
+  retrieve_episodes: 3
+  consolidate_after: 28
+  consolidate_keep: 10
+  chapter_merge_at: 40
+  recency_halflife_days: 30
+  dedupe_similarity: 0.90
+  # Persistent chat, facts, and episodes are unlimited by default. Set a
+  # positive value to opt into archival pruning; zero never deletes records.
+  max_messages: 0
+  max_facts: 0
+  max_episodes: 0
+
+blender:
+  enabled: true
+  profile: virtual_c
+  host: 127.0.0.1
+  port: 9876
+  token: ""
+  token_env: RAVICHARA_BLENDER_TOKEN
+  model_name: ""
+  render_mode: "pose"
+  snapshot_size: [512, 512]
+  animation_frames: 24
+  auto_downgrade_ms: 4000
+  stream_fps: 12
+  stream_size: [512, 512]
+  # camera: preserve the active camera aspect inside stream_size bounds.
+  # custom: transmit exactly stream_size.
+  stream_size_mode: camera
+  # The outer range controls one-shot playback; the inner range contains the
+  # actual gesture. The gaps are smooth transitions from/to the current idle.
+  playback_start_frame: 1
+  action_start_frame: 9
+  action_end_frame: 41
+  playback_end_frame: 49
+  transition_frames: 8
+  # When MCP/tags produce no usable controls, run a short constrained analysis.
+  control_analysis_enabled: true
+  # Empty uses the primary chat model; a separate small classifier can be set.
+  control_analysis_model: ""
+  # Models may autonomously queue scene/material/animation proposals, but the
+  # UI must confirm each persistent Blender mutation before it is executed.
+  scene_proposals_enabled: true
+
+video:
+  enabled: false
+  # video: MP4/WebM/HLS-compatible URL handled by WebView2.
+  # mjpeg: MJPEG or continuously refreshed image endpoint.
+  source_type: video
+  source_url: ""
+  autoplay: true
+  loop_playback: true
+  muted: true
+
+voice:
+  tts:
+    provider: none
+    base_url: ""
+    model: ""
+    voice: ""
+    api_key: ""
+    api_key_env: ""
+    response_format: mp3
+    speed: 1.0
+    style: ""
+    auto_play: false
+    split_sentences: true
+  asr:
+    provider: browser
+
+server:
+  host: 127.0.0.1
+  port: 8760
+  open_browser: false
+
+ui:
+  language: zh
+  greet_on_connect: true
+  welcome_back_hours: 8
+  user_bubble_bg: "#B6EBEC"

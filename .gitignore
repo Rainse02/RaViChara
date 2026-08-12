@@ -1,0 +1,37 @@
+# Rust and generated release output
+/target/
+/dist/
+
+# Runtime state and local credentials
+/data/*
+!/data/.keep
+/overrides.json
+/.env
+/.env.*
+!/.env.example
+*.db
+*.db-shm
+*.db-wal
+
+# WebView/browser profiles, logs, tests and crash output
+/webview/
+/logs/
+/artifacts/
+/legacy_python/
+*.crash.txt
+*.dmp
+
+# Python/Blender transient files
+__pycache__/
+*.py[cod]
+*.blend1
+*.blend2
+/blender_addons/ravichara_preview_bridge-*.zip
+/blender_addons/ravichara_preview_bridge-*.zip.sha256
+
+# Local editor configuration and raw character-card exports
+/.vscode/
+/characters/*_extracted*
+/characters/*.json
+/characters/ganyu.card.yaml
+/characters/ganyu.avatar.png
