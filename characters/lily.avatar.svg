@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 640" role="img" aria-labelledby="title desc">
+  <title id="title">Lily abstract avatar</title>
+  <desc id="desc">An original geometric portrait in the RaViChara default palette.</desc>
+  <defs>
+    <linearGradient id="hair" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#6964b7"/>
+      <stop offset="1" stop-color="#38336f"/>
+    </linearGradient>
+    <linearGradient id="coat" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#bdbbf7"/>
+      <stop offset="1" stop-color="#8581d8"/>
+    </linearGradient>
+  </defs>
+  <circle cx="256" cy="270" r="205" fill="#fef3c7" opacity=".7"/>
+  <path d="M134 238c0-112 53-174 122-174s122 62 122 174v102H134z" fill="url(#hair)"/>
+  <ellipse cx="256" cy="246" rx="92" ry="112" fill="#fff8ee"/>
+  <path d="M160 217c8-98 55-136 104-136 52 0 94 41 91 121-39-12-69-40-87-71-19 38-57 72-108 86z" fill="url(#hair)"/>
+  <path d="M151 236c-14 67-1 139 35 181-20-67-13-130 4-183zm210-1c18 63 25 128 3 184 37-45 49-117 34-183z" fill="url(#hair)"/>
+  <ellipse cx="220" cy="253" rx="12" ry="16" fill="#303566"/>
+  <ellipse cx="292" cy="253" rx="12" ry="16" fill="#303566"/>
+  <circle cx="224" cy="248" r="4" fill="#9ff3fe"/>
+  <circle cx="296" cy="248" r="4" fill="#9ff3fe"/>
+  <path d="M235 302c14 11 29 11 43 0" fill="none" stroke="#ad6674" stroke-width="6" stroke-linecap="round"/>
+  <path d="M126 596c12-145 56-211 130-211s118 66 130 211z" fill="url(#coat)"/>
+  <path d="M211 385l45 64 45-64 22 32-67 87-67-87z" fill="#fff"/>
+  <path d="M256 449v147" stroke="#9ff3fe" stroke-width="12"/>
+  <path d="M216 112c-35-47-19-81 15-84 25-2 39 20 25 48-12-23-31-25-40-8-6 12-4 28 0 44z" fill="#9ff3fe"/>
+</svg>

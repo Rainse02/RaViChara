@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RaViChara — 桌面虚拟角色应用</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="theme.css?v=20260812-cream-default-1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body data-theme="warm-beige">
+
+  <!-- Desktop Outer Blurred Background Image Layer -->
+  <div class="desktop-blurred-bg" id="desktopBlurredBg"></div>
+
+  <!-- Programmatic Outer Fuzzy Glow Band -->
+  <div class="hui-outer-ambient-glow" id="outerGlowBand"></div>
+
+  <!-- "回" 字 Concentric Window Frame -->
+  <div class="hui-window-wrapper" id="huiWindowWrapper">
+
+    <!-- Soft Dynamic Accent Stroke Line (Sharp Outer "回" Rect Line) -->
+    <div class="hui-bright-accent-stroke" id="brightAccentStroke"></div>
+
+    <!-- Outer Header Controls Bar (Located in Outer "回" Loop) -->
+    <div class="outer-hui-header-bar">
+
+      <!-- Top-Left Theme-Colored 3-Dots Settings Trigger Button -->
+      <button class="top-left-window-dots" id="threeDotsBtn" title="打开应用设置">
+        <span class="dot theme-dot"></span>
+        <span class="dot theme-dot"></span>
+        <span class="dot theme-dot"></span>
+      </button>
+
+      <!-- Top Center Character Abstract Header Pill -->
+      <div class="character-abstract-pill" id="characterAbstractPill">
+        <span class="pill-text" id="abstractPillText">Lily | 07-28</span>
+      </div>
+
+      <!-- Classic Windows Desktop Window Controls (Minimize, Maximize, Close) -->
+      <div class="win-desktop-controls">
+        <button class="win-btn minimize-btn" title="最小化">&minus;</button>
+        <button class="win-btn maximize-btn" title="最大化">&#9633;</button>
+        <button class="win-btn close-app-btn" title="关闭应用">&times;</button>
+      </div>
+    </div>
+
+    <!-- Inner Window Viewport -->
+    <div class="hui-inner-content-viewport" id="sceneContainer">
+
+      <!-- Main Viewport Body: Resizable Render vs Chat Mode -->
+      <div class="viewport-main-body" id="viewportMainBody">
+
+        <!-- Left Side: Draggable & Resizable 2D/3D Rendering Window Pane -->
+        <div class="rendering-window-pane" id="renderingWindowPane">
+          <div class="character-backdrop" id="characterBackdrop">
+            <img id="blenderFrameImg" class="blender-frame-img" alt="Blender preview frame" hidden />
+            <video id="externalVideoFrame" class="external-video-frame" playsinline hidden></video>
+            <div class="render-stage-status" id="renderStageStatus">
+              <span class="render-stage-dot"></span>
+              <span id="renderStageStatusText">2D 轻量模式</span>
+            </div>
+            <div class="character-illustration" id="characterAvatar">
+              <img id="avatarImg" src="" alt="Avatar" class="avatar-custom-img" style="display:none;" />
+              <svg viewBox="0 0 400 500" class="anime-avatar-svg" id="avatarSvg">
+                <defs>
+                  <linearGradient id="hairGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#3b2d24" />
+                    <stop offset="100%" stop-color="#1f160f" />
+                  </linearGradient>
+                  <linearGradient id="skinGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#fff5eb" />
+                    <stop offset="100%" stop-color="#ffeedd" />
+                  </linearGradient>
+                </defs>
+                <ellipse cx="200" cy="180" rx="90" ry="110" fill="url(#skinGrad)" />
+                <path d="M110,160 Q200,60 290,160 Q290,280 270,360 Q200,380 130,360 Z" fill="url(#hairGrad)" opacity="0.95" />
+                <circle cx="160" cy="200" r="12" fill="#ff9999" opacity="0.4" />
+                <circle cx="240" cy="200" r="12" fill="#ff9999" opacity="0.4" />
+                <ellipse cx="165" cy="180" rx="10" ry="14" fill="#2d1f15" />
+                <ellipse cx="235" cy="180" rx="10" ry="14" fill="#2d1f15" />
+                <path d="M190,215 Q200,225 210,215" stroke="#2d1f15" stroke-width="3" fill="none" stroke-linecap="round" />
+              </svg>
+              <div class="character-stage-fx" id="characterStageFx" aria-hidden="true"></div>
+            </div>
+          </div>
+
+          <!-- Draggable Edge Resizer Handle -->
+          <div class="pane-resizer-handle" id="paneResizerHandle" title="按住拖拽调节窗口宽度，向左拉倒则自动折叠"></div>
+        </div>
+
+        <!-- Right Side: Main Chat Section Pane -->
+        <div class="chat-section-pane" id="chatSectionPane">
+          <div class="main-backdrop-image-layer" id="mainBackdropImageLayer"></div>
+
+          <!-- Top-Left Compact Circular Avatar Badge (Absolute Top-Left) -->
+          <div class="compact-avatar-badge" id="compactAvatarBadge" title="点击展开渲染视口">
+            <img id="badgeAvatarImg" src="" alt="Avatar Badge" style="display:none;" />
+            <div class="badge-fallback-icon" id="badgeFallbackIcon">🎭</div>
+          </div>
+
+          <!-- Dialogue Bubbles Stream (Shifted Right with Left Clearance!) -->
+          <div class="chat-history-container" id="chatHistory">
+            <div class="chat-timestamp-divider" id="initialChatTimestamp">2026-07-28 20:55</div>
+
+            <div class="chat-bubble character-bubble">
+              <div class="bubble-content" id="greetingBubble">你好，我是莉莉。今天想聊些什么？</div>
+            </div>
+          </div>
+
+          <!-- Bottom Glassmorphic Input Bar -->
+          <div class="bottom-input-container">
+            <div class="glass-input-pill">
+              <button class="mic-btn" id="micBtn" title="语音输入">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/>
+                  <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                  <line x1="12" y1="19" x2="12" y2="22"/>
+                </svg>
+              </button>
+
+              <input type="text" class="chat-input" id="chatInput" placeholder="Type here or hold to speak..." autocomplete="off" />
+
+              <button class="send-btn" id="sendBtn" title="发送">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                  <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Top-Level Semi-Transparent Glassmorphic Overlay Panel -->
+  <div class="glass-settings-panel-overlay" id="glassSettingsOverlay">
+    <div class="glass-panel-content" id="glassPanelContent">
+
+      <!-- Panel Header -->
+      <div class="glass-panel-header">
+        <h3>应用设置</h3>
+        <button class="close-btn" id="closeSettingsPanel">&times;</button>
+      </div>
+
+      <!-- Panel Body: Pure Text Sidebar Tabs + Content Pane -->
+      <div class="glass-panel-body">
+
+        <!-- Pure Text Sidebar Tabs -->
+        <div class="settings-sidebar-tabs">
+          <div class="tab-btn active" data-tab="tabLlm">模型与LLM</div>
+          <div class="tab-btn" data-tab="tabMemory">独立记忆库</div>
+          <div class="tab-btn" data-tab="tabPersona">多角色人设</div>
+          <div class="tab-btn" data-tab="tabAppearance">外观与定制</div>
+          <div class="tab-btn" data-tab="tabVoice">声音与朗读</div>
+          <div class="tab-btn" data-tab="tabBlender">Blender算力</div>
+        </div>
+
+        <!-- Right Content Pane -->
+        <div class="settings-tab-content">
+
+          <!-- Tab 1: LLM Engine & Custom Time Perception Input -->
+          <div class="tab-pane active" id="tabLlm">
+            <h4>模型与对话时间感知设置</h4>
+            <p class="pane-desc">配置大语言模型及沉浸式时间感知标签插入间隔。</p>
+
+            <!-- Custom Open Number Input for Timestamp Interval -->
+            <div class="form-group">
+              <label>时间标签插入间隔 (自定义分钟数)：</label>
+              <div style="display:flex; align-items:center; gap:10px;">
+                <input type="number" id="timestampIntervalInput" min="1" max="1440" value="10" placeholder="如 10" class="glass-input" style="flex:1;" />
+                <span style="font-size:13px; font-weight:500;">分钟</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Provider 供应商：</label>
+              <div class="custom-glass-select-wrapper" id="llmProviderSelectWrapper">
+                <div class="custom-select-trigger">
+                  <span class="selected-text">LM Studio (本地)</span>
+                  <span class="arrow-icon">▾</span>
+                </div>
+                <div class="custom-select-menu">
+                  <div class="custom-option selected" data-value="lmstudio">LM Studio (本地)</div>
+                  <div class="custom-option" data-value="ollama">Ollama (本地)</div>
+                  <div class="custom-option" data-value="openai">OpenAI</div>
+                  <div class="custom-option" data-value="deepseek">DeepSeek</div>
+                  <div class="custom-option" data-value="qwen">阿里云百炼 / Qwen</div>
+                  <div class="custom-option" data-value="siliconflow">SiliconFlow</div>
+                  <div class="custom-option" data-value="zhipu">智谱 GLM</div>
+                  <div class="custom-option" data-value="openrouter">OpenRouter</div>
+                  <div class="custom-option" data-value="groq">Groq</div>
+                  <div class="custom-option" data-value="gemini">Google Gemini</div>
+                  <div class="custom-option" data-value="mistral">Mistral AI</div>
+                  <div class="custom-option" data-value="mimo">小米 MiMo</div>
+                  <div class="custom-option" data-value="custom">Custom (自定义OpenAI兼容)</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>API Key：</label>
+              <input type="password" id="llmApiKey" placeholder="sk-..." class="form-control glass-input" />
+            </div>
+
+            <div class="form-group">
+              <label>Base URL：</label>
+              <input type="text" id="llmBaseUrl" placeholder="http://127.0.0.1:1234/v1" class="form-control glass-input" />
+            </div>
+
+            <div class="form-group">
+              <label>模型名称：</label>
+              <input type="text" id="llmModel" placeholder="模型 ID，例如 qwen3.5:9b" class="form-control glass-input" />
+            </div>
+
+            <div class="settings-inline-grid">
+              <div class="form-group">
+                <label>最大输出 Token：</label>
+                <input type="number" id="llmMaxTokens" min="64" max="32768" step="64" value="2048" class="form-control glass-input" />
+              </div>
+              <div class="form-group">
+                <label>角色示例组数：</label>
+                <input type="number" id="llmExampleLimit" min="0" max="20" value="1" class="form-control glass-input" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>推理模式：</label>
+              <div class="custom-glass-select-wrapper" id="llmThinkingSelectWrapper">
+                <div class="custom-select-trigger">
+                  <span class="selected-text">disabled（节省首轮 Token）</span>
+                  <span class="arrow-icon">▾</span>
+                </div>
+                <div class="custom-select-menu">
+                  <div class="custom-option selected" data-value="disabled">disabled（节省首轮 Token）</div>
+                  <div class="custom-option" data-value="auto">auto（由模型决定）</div>
+                  <div class="custom-option" data-value="enabled">enabled（允许深度推理）</div>
+                </div>
+              </div>
+              <p class="field-note">默认不再在推理耗尽后自动翻倍重试；每次响应会返回真实 usage 和提示词分项统计。部分 LM Studio Qwen3.5 文件未暴露 reasoning 开关，此时 disabled 只能作为提示，最终以 reasoning_tokens 为准。</p>
+            </div>
+
+            <button class="btn-primary" id="saveLlmBtn">保存模型配置</button>
+          </div>
+
+          <!-- Tab 2: Memory System -->
+          <div class="tab-pane" id="tabMemory">
+            <h4>独立记忆数据库 (SQLite)</h4>
+            <p class="pane-desc">当前角色 [<span id="activeCharMemoryName">Lily</span>] 的独占记忆文件存放在 <code>data/memories/</code> 目录。</p>
+            <div id="memoryDetailContainer" class="memory-list-box glass-card">
+              <p class="loading-text">正在从 Rust SQLite 后端提取记忆数据...</p>
+            </div>
+          </div>
+
+          <!-- Tab 3: Persona Management -->
+          <div class="tab-pane" id="tabPersona">
+            <h4>多角色人设管理</h4>
+            <p class="pane-desc">选择交流的角色卡，角色卡与 SQLite 记忆隔离文件自动联动。</p>
+            <div class="persona-options-grid" id="personaSettingsGrid"></div>
+          </div>
+
+          <!-- Tab 4: UI Appearance & Customization -->
+          <div class="tab-pane" id="tabAppearance">
+            <h4>UI 外观与配色调色盘</h4>
+            <p class="pane-desc">支持无背景图片时自定义主界面底色、消息气泡与渲染框梯度色彩。</p>
+
+            <div class="form-group">
+              <label>预设背景氛围：</label>
+              <div class="theme-options-grid">
+                <div class="theme-option-card" data-bg="sunset">
+                  <div class="theme-preview sunset-preview"></div>
+                  <span>日落暖居</span>
+                </div>
+                <div class="theme-option-card" data-bg="midnight">
+                  <div class="theme-preview midnight-preview"></div>
+                  <span>月影深海</span>
+                </div>
+                <div class="theme-option-card" data-bg="cyber">
+                  <div class="theme-preview cyber-preview"></div>
+                  <span>极光霓虹</span>
+                </div>
+                <div class="theme-option-card active" data-bg="warm-beige">
+                  <div class="theme-preview beige-preview"></div>
+                  <span>典雅米白</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-top:16px;">
+              <label>上传主界面自定义背景图片：</label>
+              <label class="custom-file-button" for="bgFileInput">
+                选择背景图片文件
+              </label>
+              <input type="file" id="bgFileInput" accept="image/*" style="display:none;" />
+              <button class="btn-secondary" id="resetBgBtn" style="margin-top:8px;">重置背景</button>
+            </div>
+
+            <div class="form-group" style="margin-top:16px;">
+              <label>上传自定义角色立绘：</label>
+              <label class="custom-file-button" for="avatarFileInput">
+                选择角色立绘文件
+              </label>
+              <input type="file" id="avatarFileInput" accept="image/*" style="display:none;" />
+              <button class="btn-secondary" id="resetAvatarBtn" style="margin-top:8px;">恢复默认立绘</button>
+            </div>
+
+            <!-- Independent Color Swatches -->
+            <div class="form-group" style="margin-top:16px;">
+              <label>独立颜色配色设置：</label>
+
+              <div class="color-picker-row">
+                <span class="color-picker-label">主界面无图底色调色：</span>
+                <input type="color" id="mainBackdropColorPicker" value="#FEF3C7" class="color-swatch-input" />
+                <span class="color-hex-val" id="mainColorHexText">#FEF3C7</span>
+              </div>
+
+              <div class="color-picker-row" style="margin-top:10px;">
+                <span class="color-picker-label">用户消息气泡色彩：</span>
+                <input type="color" id="userBubbleColorPicker" value="#B6EBEC" class="color-swatch-input" />
+                <span class="color-hex-val" id="userColorHexText">#B6EBEC</span>
+              </div>
+
+              <div class="color-picker-row" style="margin-top:10px;">
+                <span class="color-picker-label">顶部信息栏与强调色：</span>
+                <input type="color" id="accentColorPicker" value="#9FF3FE" class="color-swatch-input" />
+                <span class="color-hex-val" id="accentColorHexText">#9FF3FE</span>
+              </div>
+
+              <div class="color-picker-row" style="margin-top:10px;">
+                <span class="color-picker-label">角色/提示消息框色彩：</span>
+                <input type="color" id="characterBubbleColorPicker" value="#FFFFFF" class="color-swatch-input" />
+                <span class="color-hex-val" id="charColorHexText">#FFFFFF</span>
+              </div>
+
+              <div class="color-picker-row" style="margin-top:10px;">
+                <span class="color-picker-label">渲染框背景色彩：</span>
+                <input type="color" id="renderBackdropColorPicker" value="#BDBBF7" class="color-swatch-input" />
+                <span class="color-hex-val" id="renderColorHexText">#BDBBF7</span>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Tab 5: Voice -->
+          <div class="tab-pane" id="tabVoice">
+            <h4>声音与自动朗读</h4>
+            <p class="pane-desc">浏览器朗读无需 API；OpenAI-compatible 与小米 MiMo TTS 由 Rust 后端代理，密钥不会写入磁盘。</p>
+
+            <div class="form-group">
+              <label>TTS Provider：</label>
+              <div class="custom-glass-select-wrapper" id="ttsProviderSelectWrapper">
+                <div class="custom-select-trigger">
+                  <span class="selected-text">关闭语音合成</span>
+                  <span class="arrow-icon">▾</span>
+                </div>
+                <div class="custom-select-menu">
+                  <div class="custom-option selected" data-value="none">关闭语音合成</div>
+                  <div class="custom-option" data-value="browser">浏览器 SpeechSynthesis（免 API）</div>
+                  <div class="custom-option" data-value="openai">OpenAI TTS</div>
+                  <div class="custom-option" data-value="mimo">小米 MiMo V2.5 TTS</div>
+                  <div class="custom-option" data-value="custom-openai">自定义 OpenAI-compatible TTS</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="settings-inline-grid">
+              <div class="form-group">
+                <label>模型：</label>
+                <input type="text" id="ttsModel" placeholder="gpt-4o-mini-tts" class="form-control glass-input" />
+              </div>
+              <div class="form-group">
+                <label>音色 Voice：</label>
+                <input type="text" id="ttsVoice" placeholder="alloy / 冰糖" class="form-control glass-input" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Base URL：</label>
+              <input type="text" id="ttsBaseUrl" placeholder="https://api.openai.com/v1" class="form-control glass-input" />
+            </div>
+
+            <div class="form-group">
+              <label>API Key：</label>
+              <input type="password" id="ttsApiKey" placeholder="仅应用于当前进程" class="form-control glass-input" />
+            </div>
+
+            <div class="settings-inline-grid">
+              <div class="form-group">
+                <label>音频格式：</label>
+                <div class="custom-glass-select-wrapper" id="ttsFormatSelectWrapper">
+                  <div class="custom-select-trigger">
+                    <span class="selected-text">mp3</span>
+                    <span class="arrow-icon">▾</span>
+                  </div>
+                  <div class="custom-select-menu">
+                    <div class="custom-option selected" data-value="mp3">mp3</div>
+                    <div class="custom-option" data-value="wav">wav</div>
+                    <div class="custom-option" data-value="opus">opus</div>
+                    <div class="custom-option" data-value="aac">aac</div>
+                    <div class="custom-option" data-value="flac">flac</div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>语速：</label>
+                <input type="number" id="ttsSpeed" min="0.25" max="4" step="0.05" value="1" class="form-control glass-input" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>发音风格（可选）：</label>
+              <input type="text" id="ttsStyle" maxlength="500" placeholder="例如：轻快、温柔、语速稍慢" class="form-control glass-input" />
+            </div>
+
+            <label class="settings-check-row">
+              <input type="checkbox" id="ttsAutoPlay" />
+              <span>收到角色回复后自动朗读</span>
+            </label>
+
+            <div class="settings-action-row">
+              <button class="btn-primary" id="saveTtsBtn">保存 TTS 配置</button>
+              <button class="btn-secondary" id="testTtsBtn">试听</button>
+            </div>
+            <p class="field-note" id="ttsStatusText">TTS 当前未启用。</p>
+          </div>
+
+          <!-- Tab 6: Blender & System -->
+          <div class="tab-pane" id="tabBlender">
+            <h4>Blender 桥接控制</h4>
+            <p class="pane-desc">表情和骨骼动作使用 Virtual_c；画面回传需要启用项目内的 RaViChara Preview Bridge 伴生扩展。未安装时自动保留 2D 轻量模式。</p>
+
+            <div class="bridge-status-grid">
+              <div class="bridge-status-card">
+                <span class="bridge-status-label">控制桥</span>
+                <strong id="blenderBridgeStatus">检测中</strong>
+              </div>
+              <div class="bridge-status-card">
+                <span class="bridge-status-label">画面扩展</span>
+                <strong id="blenderPreviewStatus">检测中</strong>
+              </div>
+              <div class="bridge-status-card">
+                <span class="bridge-status-label">显示源</span>
+                <strong id="activeRenderSource">2D</strong>
+              </div>
+              <div class="bridge-status-card">
+                <span class="bridge-status-label">Blender 相机</span>
+                <strong id="blenderCameraStatus">检测中</strong>
+              </div>
+              <div class="bridge-status-card">
+                <span class="bridge-status-label">实际传输</span>
+                <strong id="blenderStreamStatus">检测中</strong>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>桥接状态：</label>
+              <div class="custom-glass-select-wrapper" id="blenderProfileSelectWrapper">
+                <div class="custom-select-trigger">
+                  <span class="selected-text">off (关闭 Blender 桥接)</span>
+                  <span class="arrow-icon">▾</span>
+                </div>
+                <div class="custom-select-menu">
+                  <div class="custom-option selected" data-value="off">off (关闭 Blender 桥接)</div>
+                  <div class="custom-option" data-value="pose">pose (极低消耗，仅视口动作驱动)</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>界面渲染源：</label>
+              <div class="custom-glass-select-wrapper" id="renderSourceSelectWrapper">
+                <div class="custom-select-trigger">
+                  <span class="selected-text">2D 轻量动作</span>
+                  <span class="arrow-icon">▾</span>
+                </div>
+                <div class="custom-select-menu">
+                  <div class="custom-option selected" data-value="2d">2D 轻量动作</div>
+                  <div class="custom-option" data-value="blender">Blender 实时画面</div>
+                  <div class="custom-option" data-value="video">外部视频 / 实时流</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="glass-card blender-animation-card">
+              <strong class="settings-section-title">外部视频与视频模型输出</strong>
+              <label class="settings-check-row">
+                <input type="checkbox" id="videoEnabled" />
+                <span>启用外部视频渲染源</span>
+              </label>
+              <div class="settings-inline-grid">
+                <div class="form-group">
+                  <label>来源类型</label>
+                  <div class="custom-glass-select-wrapper" id="videoSourceTypeWrapper">
+                    <div class="custom-select-trigger">
+                      <span class="selected-text">标准视频 / WebView2 流</span>
+                      <span class="arrow-icon">▾</span>
+                    </div>
+                    <div class="custom-select-menu">
+                      <div class="custom-option selected" data-value="video">标准视频 / WebView2 流</div>
+                      <div class="custom-option" data-value="mjpeg">MJPEG / 连续图像流</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="videoSourceUrl">视频或本地推理服务 URL</label>
+                  <input type="url" id="videoSourceUrl" maxlength="2048" placeholder="http://127.0.0.1:8188/output/live.mp4" class="form-control glass-input" />
+                </div>
+              </div>
+              <div class="settings-inline-grid settings-inline-grid-3">
+                <label class="settings-check-row">
+                  <input type="checkbox" id="videoAutoplay" checked />
+                  <span>自动播放</span>
+                </label>
+                <label class="settings-check-row">
+                  <input type="checkbox" id="videoLoop" checked />
+                  <span>循环播放</span>
+                </label>
+                <label class="settings-check-row">
+                  <input type="checkbox" id="videoMuted" checked />
+                  <span>静音</span>
+                </label>
+              </div>
+              <p class="field-note">可接收视频模型、ComfyUI/自建推理服务或直播管线输出的 HTTP(S) URL。播放与文本回复并行，不下载、不写入视频缓存。</p>
+            </div>
+
+            <div class="form-group">
+              <label>实时画幅模式：</label>
+              <div class="custom-glass-select-wrapper" id="blenderStreamSizeModeWrapper">
+                <div class="custom-select-trigger">
+                  <span class="selected-text">跟随活动相机比例</span>
+                  <span class="arrow-icon">▾</span>
+                </div>
+                <div class="custom-select-menu">
+                  <div class="custom-option selected" data-value="camera">跟随活动相机比例</div>
+                  <div class="custom-option" data-value="custom">自定义传输尺寸</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="settings-inline-grid settings-inline-grid-3">
+              <div class="form-group">
+                <label for="blenderStreamWidth">宽度上限 / 宽度</label>
+                <input type="number" id="blenderStreamWidth" min="128" max="1024" step="1" value="512" class="form-control glass-input" />
+              </div>
+              <div class="form-group">
+                <label for="blenderStreamHeight">高度上限 / 高度</label>
+                <input type="number" id="blenderStreamHeight" min="128" max="1024" step="1" value="512" class="form-control glass-input" />
+              </div>
+              <div class="form-group">
+                <label for="blenderStreamFps">实时 FPS</label>
+                <input type="number" id="blenderStreamFps" min="1" max="30" step="1" value="12" class="form-control glass-input" />
+              </div>
+            </div>
+            <p class="field-note">“跟随相机”会在宽高上限内保持 Blender 活动相机的原始比例，例如 1920×1080 会传输为 512×288；“自定义”则按输入尺寸重新计算相机投影。</p>
+
+            <div class="glass-card blender-animation-card">
+              <strong class="settings-section-title">一次性动作与待机过渡</strong>
+              <div class="settings-inline-grid">
+                <div class="form-group">
+                  <label for="blenderPlaybackStart">播放起始帧</label>
+                  <input type="number" id="blenderPlaybackStart" min="1" max="1000000" step="1" value="1" class="form-control glass-input" />
+                </div>
+                <div class="form-group">
+                  <label for="blenderActionStart">动作起始帧</label>
+                  <input type="number" id="blenderActionStart" min="1" max="1000000" step="1" value="9" class="form-control glass-input" />
+                </div>
+                <div class="form-group">
+                  <label for="blenderActionEnd">动作结束帧</label>
+                  <input type="number" id="blenderActionEnd" min="2" max="1000000" step="1" value="41" class="form-control glass-input" />
+                </div>
+                <div class="form-group">
+                  <label for="blenderPlaybackEnd">播放结束帧</label>
+                  <input type="number" id="blenderPlaybackEnd" min="2" max="1000000" step="1" value="49" class="form-control glass-input" />
+                </div>
+              </div>
+              <div class="settings-inline-grid">
+                <div class="form-group">
+                  <label for="blenderTransitionFrames">最小过渡帧数</label>
+                  <input type="number" id="blenderTransitionFrames" min="0" max="120" step="1" value="8" class="form-control glass-input" />
+                </div>
+                <div class="form-group">
+                  <label for="blenderControlAnalysisModel">动作分析模型</label>
+                  <input type="text" id="blenderControlAnalysisModel" placeholder="留空沿用主模型" class="form-control glass-input" />
+                </div>
+              </div>
+              <label class="settings-check-row">
+                <input type="checkbox" id="blenderControlAnalysisEnabled" checked />
+                <span>主回复未产生 MCP 动作时，使用短提示词二次分析表情与动作</span>
+              </label>
+              <label class="settings-check-row">
+                <input type="checkbox" id="blenderSceneProposalsEnabled" checked />
+                <span>允许模型根据明确请求提出场景、材质与动画修改；每项持久修改仍需手动确认</span>
+              </label>
+              <p class="field-note">播放起始→动作起始用于过渡进入；动作结束→播放结束用于回到待机。结束帧到达后自动停止，不再循环上一动作。</p>
+            </div>
+
+            <div class="settings-action-row">
+              <button class="btn-primary" id="saveBlenderSettingsBtn">保存画幅与动作</button>
+              <button class="btn-secondary" id="testBlenderBtn">完整诊断</button>
+              <button class="btn-secondary" id="refreshBlenderFrameBtn">重连实时画面</button>
+              <button class="btn-secondary" id="stopBlenderAnimationBtn">停止动作并返回待机</button>
+              <button class="btn-secondary" id="test2dMotionBtn">测试 2D 动作</button>
+              <button class="btn-secondary" id="testVideoSourceBtn">测试视频源</button>
+            </div>
+
+            <div class="glass-card blender-diagnostic-output" id="blenderDiagnosticOutput">
+              尚未执行诊断。
+            </div>
+
+            <p class="field-note">Blender 使用无队列 WebSocket 帧流；画面限制为 128–1024 px。伴生扩展在内存中编码，不保存帧文件；外部视频也仅由 WebView2 播放，不写入项目缓存。</p>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js?v=20260730-blender-control-policy-1"></script>
+</body>
+</html>

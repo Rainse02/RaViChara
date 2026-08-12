@@ -1,0 +1,9 @@
+schema_version = "1.0.0"
+id = "ravichara_preview_bridge"
+version = "0.5.5"
+name = "RaViChara Preview Bridge"
+tagline = "Adds bounded preview and generated avatar behavior to Virtual_c"
+maintainer = "RaViChara contributors"
+type = "add-on"
+blender_version_min = "4.2.0"
+license = ["SPDX:MIT"]

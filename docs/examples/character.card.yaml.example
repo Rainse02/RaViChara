@@ -1,0 +1,35 @@
+name: Example
+card_file: characters/example.card.yaml
+display_name:
+  zh: 示例角色
+  en: Example
+avatar: characters/example.avatar.png
+greeting:
+  zh: 你好。这里填写符合角色设定、但不含控制标签的自然问候语。
+  en: Hello. Put a natural greeting here without control tags.
+personality: >-
+  描述长期稳定、彼此不矛盾的人格特征。
+speech_style: >-
+  描述语气、用词、语言切换和事实表达习惯。
+background: >-
+  描述与当前对话无关且长期成立的角色背景。
+example_dialogues:
+  - user: 一个能代表常见场景的问题。
+    character: 一个只包含可见自然语言、符合角色设定的回答。
+expressions:
+  default: smile
+  happy: joy
+  sad: sad
+likes:
+  - 示例偏好
+dislikes:
+  - 示例厌恶
+language_policy: Mirror the user's language; use natural Simplified Chinese by default.
+reply_length: 1-3 sentences for ordinary conversation; expand only when needed.
+no_ai_disclosure: true
+system_extra: >-
+  Add only stable, auditable constraints. Do not put tool syntax or hidden action commands here.
+source_url: https://example.com/original-source
+creator: Original creator name
+rights_notice: >-
+  State whether this is original or adapted, identify the license, and record permission for card and avatar redistribution.

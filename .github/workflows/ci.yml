@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+      - name: Use minimal Rust profile
+        shell: pwsh
+        run: |
+          rustup set profile minimal
+          rustup update stable --no-self-update
+          rustup default stable
+      - name: Release preflight
+        shell: pwsh
+        run: .\scripts\release_preflight.ps1 -RequireCleanGit
+      - name: Rust tests
+        run: cargo test --locked
+      - name: JavaScript syntax
+        run: node --check static/app.js
+      - name: Release build
+        run: cargo build --release --locked
